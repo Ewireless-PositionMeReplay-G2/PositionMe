@@ -25,10 +25,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.ar.core.Point;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.openpositioning.PositionMe.R;
@@ -41,6 +44,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.openpositioning.PositionMe.IndoorMapManager;
 
 public class Replay extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -56,6 +61,11 @@ public class Replay extends AppCompatActivity implements OnMapReadyCallback {
     private ImageButton playButton, fastRewind, fastForward, gotoStartButton, gotoEndButon;
     private TextView progressText;
     private String filePath;
+
+    // Add indoor map manager instance
+    private IndoorMapManager indoorMapManager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +151,11 @@ public class Replay extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+
+        // Initialize the indoor map manager and set indoor overlays
+        indoorMapManager = new IndoorMapManager(mMap);
+        indoorMapManager.setIndicationOfIndoorMap();
+
         drawTrack();
     }
 
@@ -279,6 +294,11 @@ public class Replay extends AppCompatActivity implements OnMapReadyCallback {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
             if (currentMarker != null) currentMarker.setPosition(point);
 
+            // Update indoor overlay with the current replay location
+            if (indoorMapManager != null) {
+                indoorMapManager.setCurrentLocation(point);
+            }
+
             // Avoid crash if progressText is null
             if (progressText != null) {
                 progressText.setText("Progress：" + (currentIndex + 1) + "/" + trackPoints.size());
@@ -287,7 +307,6 @@ public class Replay extends AppCompatActivity implements OnMapReadyCallback {
             }
         }
     }
-
 
 
 }
