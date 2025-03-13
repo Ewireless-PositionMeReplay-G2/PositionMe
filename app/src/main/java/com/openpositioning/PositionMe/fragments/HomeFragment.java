@@ -14,6 +14,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.material.button.MaterialButton;
 import com.openpositioning.PositionMe.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -32,10 +33,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class HomeFragment extends Fragment {
 
     // Interactive UI elements to navigate to other fragments
-    private FloatingActionButton goToInfo;
-    private Button start;
-    private Button measurements;
-    private Button files;
+    private MaterialButton goToInfo;
+    private MaterialButton start;
+    private MaterialButton measurements;
+    private MaterialButton files;
 
     /**
      * Default empty constructor, unused.
